@@ -1,10 +1,14 @@
 using SqlFormatter.Components;
+using SqlFormatter.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+// Register application services
+builder.Services.AddScoped<TSqlFormatterService>();
 
 var app = builder.Build();
 

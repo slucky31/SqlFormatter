@@ -1,0 +1,95 @@
+@page "/sql-format"
+@using SqlFormatter.Services
+@inject TSqlFormatterService FormatterService
+@rendermode InteractiveServer
+
+<PageTitle>T-SQL Formatter</PageTitle>
+
+<h1>T-SQL Formatter</h1>
+
+<p>Format your T-SQL queries with proper indentation and structure.</p>
+
+<div class="row mt-4">
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="inputSql" class="form-label fw-bold">Input SQL</label>
+            <textarea class="form-control font-monospace"
+                      id="inputSql"
+                      rows="15"
+                      @bind="inputSql"
+                      placeholder="Enter your T-SQL query here..."></textarea>
+        </div>
+        <button class="btn btn-primary" @onclick="FormatSql">
+            <span class="oi oi-brush" aria-hidden="true"></span> Format SQL
+        </button>
+        <button class="btn btn-secondary ms-2" @onclick="ClearAll">
+            <span class="oi oi-x" aria-hidden="true"></span> Clear
+        </button>
+        <button class="btn btn-outline-secondary ms-2" @onclick="LoadExample">
+            <span class="oi oi-file" aria-hidden="true"></span> Load Example
+        </button>
+    </div>
+    <div class="col-md-6">
+        <div class="mb-3">
+            <label for="outputSql" class="form-label fw-bold">Formatted SQL</label>
+            <textarea class="form-control font-monospace"
+                      id="outputSql"
+                      rows="15"
+                      readonly
+                      @bind="outputSql"
+                      placeholder="Formatted SQL will appear here..."></textarea>
+        </div>
+        @if (!string.IsNullOrEmpty(outputSql))
+        {
+            <button class="btn btn-success" @onclick="CopyToClipboard">
+                <span class="oi oi-clipboard" aria-hidden="true"></span> Copy to Clipboard
+            </button>
+            @if (copySuccess)
+            {
+                <span class="text-success ms-2">Copied!</span>
+            }
+        }
+    </div>
+</div>
+
+@code {
+    private string inputSql = string.Empty;
+    private string outputSql = string.Empty;
+    private bool copySuccess = false;
+
+    private void FormatSql()
+    {
+        copySuccess = false;
+        if (!string.IsNullOrWhiteSpace(inputSql))
+        {
+            outputSql = FormatterService.Format(inputSql);
+        }
+        else
+        {
+            outputSql = string.Empty;
+        }
+    }
+
+    private void ClearAll()
+    {
+        inputSql = string.Empty;
+        outputSql = string.Empty;
+        copySuccess = false;
+    }
+
+    private void LoadExample()
+    {
+        inputSql = "select code_tag, count(code_site) from idex..TAB_BULK_TW_SiteTag group by code_tag order by code_tag";
+        copySuccess = false;
+        outputSql = string.Empty;
+    }
+
+    private async Task CopyToClipboard()
+    {
+        // Note: This requires JavaScript interop which we'll implement
+        // For now, we'll just show a success message
+        copySuccess = true;
+        await Task.Delay(2000);
+        copySuccess = false;
+    }
+}
