@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/Solution Items/" />
+  <Project Path="SqlFormatter\SqlFormatter.csproj" Type="Classic C#" />
+  <Project Path="SqlFormatter.Tests\SqlFormatter.Tests.csproj" Type="Classic C#" />
+</Solution>
